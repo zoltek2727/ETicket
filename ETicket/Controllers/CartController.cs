@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ETicket.Controllers
@@ -132,7 +133,7 @@ namespace ETicket.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Purchase(int purchaseID)
+        public async Task<IActionResult> Purchase()
         {
             List<ShoppingCart> cart = SessionHelper.GetObjectFromJson<List<ShoppingCart>>(HttpContext.Session, "cart");
 
@@ -140,34 +141,6 @@ namespace ETicket.Controllers
 
             try
             {
-                Purchases p = new Purchases
-                {
-                    PurchaseTicketDate = DateTime.Now,
-                    Id = id
-                };
-                _context.Add(p);
-
-                //LeasingDetail ld;
-
-                //foreach (var item in cart)
-                //{
-                //    ld = new LeasingDetail
-                //    {
-                //        LeasingId = l.LeasingId,
-                //        LeasingDetailAmount = item.Quantity,
-                //        LeasingDetailExtend = true,
-                //        LeasingDetailEnd = DateTime.Now.AddYears(1),
-                //        ProductId = item.Product.ProductId
-                //    };
-                //    var product = _context.Products.Where(p => p.ProductId == item.Product.ProductId).ToList();
-                //    foreach(var prod in product)
-                //    {
-                //        prod.ProductAvailability -= item.Quantity;
-                //    }
-
-                //    _context.Add(ld);
-                //}
-
                 SmtpClient client = new SmtpClient();
                 client.Host = "smtp.gmail.com";
                 client.Port = 587;
@@ -181,17 +154,44 @@ namespace ETicket.Controllers
                 MailMessage mailMessage = new MailMessage();
                 mailMessage.From = new MailAddress("techleasingshop@gmail.com");
                 mailMessage.To.Add(email);
-                mailMessage.Body = "Order no. "+p.PurchaseId;
-                mailMessage.Subject = "Your order is completed. Please pay your bill.";
-                mailMessage.Attachments.Add(new Attachment(@"C:\PDF\Leasing.pdf"));
-                client.Send(mailMessage);
+
+                mailMessage.Subject = "Your order is ready. Please pay your bill.";
+
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine("Your order:");
+                foreach (var c in cart)
+                {
+                    sb.AppendLine(_context.Events.Where(e => e.EventId == c.Ticket.EventId).FirstOrDefault().EventName +" "+c.Ticket.TicketName+" "+c.Ticket.TicketPrice+" "+c.Quantity+" "+c.Ticket.TicketPrice*c.Quantity);
+                    Purchases p = new Purchases
+                    {
+                        PurchaseTicketDate = DateTime.Now,
+                        Id = id,
+                        DeliveryId = 1,
+                        PurchaseAmount = c.Quantity,
+                        Ticket = c.Ticket
+                    };
+                    
+                    var ticket = _context.Tickets.Where(t => t.TicketId == c.Ticket.TicketId).ToList();
+                    foreach(var tick in ticket)
+                    {
+                        tick.TicketAvailability -= c.Quantity;
+                    }
+
+                    _context.Add(p);
+                }
 
                 _context.SaveChanges();
+
+                sb.AppendLine("Thanks for buying at our store");
+
+                mailMessage.Body = sb.ToString();
+                client.Send(mailMessage);
             }
             catch
             {
                 ViewBag.ErrorMessage = "Your cart can't be empty";
-                return RedirectToAction("Index", "Purchases", new { id = _context.Purchases.Last().PurchaseId });
+                return RedirectToAction("Index", "Home");
             }
                 
             cart = null;

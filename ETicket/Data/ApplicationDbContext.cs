@@ -28,6 +28,8 @@ namespace ETicket.Data
         public virtual DbSet<Purchases> Purchases { get; set; }
         public virtual DbSet<Tickets> Tickets { get; set; }
         public virtual DbSet<Tours> Tours { get; set; }
+        public virtual DbSet<PhotoEvents> PhotoEvents { get; set; }
+        public virtual DbSet<Photos> Photos { get; set; }
         public new virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -119,6 +121,35 @@ namespace ETicket.Data
                     .HasConstraintName("FK_Performers_ToPerformerCategories");
             });
 
+            modelBuilder.Entity<PhotoEvents>(entity =>
+            {
+                entity.HasKey(e => e.PhotoEventId);
+
+                entity.Property(e => e.PhotoEventDefault)
+                    .IsRequired();
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.PhotoEvents)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PhotoEvents_ToEvents");
+
+                entity.HasOne(d => d.Photo)
+                    .WithMany(p => p.PhotoEvents)
+                    .HasForeignKey(d => d.PhotoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PhotoEvents_ToPhotos");
+            });
+
+            modelBuilder.Entity<Photos>(entity =>
+            {
+                entity.HasKey(e => e.PhotoId);
+
+                entity.Property(e => e.PhotoUrl)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
             modelBuilder.Entity<Places>(entity =>
             {
                 entity.HasKey(e => e.PlaceId);
@@ -145,10 +176,6 @@ namespace ETicket.Data
             modelBuilder.Entity<Purchases>(entity =>
             {
                 entity.HasKey(e => e.PurchaseId);
-
-                entity.Property(e => e.PurchaseSelectedRow).HasMaxLength(10);
-
-                entity.Property(e => e.PurchaseSelectedRowSeat).HasMaxLength(10);
 
                 entity.Property(e => e.PurchaseTicketDate).HasColumnType("datetime");
 

@@ -20,13 +20,13 @@
 </a>
 <div class="row">
     <div class='list-group gallery col-xs-6 '>
-        @if (1 > 1)
+        @if (Model.PhotoEvents.Count > 0)
         {
-            @*@foreach (var photoItem in Model.PhotoProducts)
+            @foreach (var photoItem in Model.PhotoEvents)
                 {
                     <div class="item-photo">
                         <a class="thumbnail fancybox" rel="ligthbox" href="@Url.Content(photoItem.Photo.PhotoUrl)">
-                            @if (photoItem.PhotoProductIsDefault)
+                            @if (photoItem.PhotoEventDefault)
                             {
                                 <img class="img-responsive" style="max-width:100%;" src="@Url.Content(photoItem.Photo.PhotoUrl)" alt="Image" />
                             }
@@ -38,7 +38,7 @@
                             }
                         </a>
                     </div>
-                }*@
+                }
         }
         else
         {
@@ -82,7 +82,7 @@
                             <b>@Html.DisplayFor(modelItem => itemTicket.TicketPrice)$</b>
                         </div>
                         <div class="col-xs-2">
-                            <input asp-for="@amount" id="@itemTicket.TicketId" type="number" min="1" step="1" max="@Model.EventTicketPurchaseLimit" value="@amount" class="form-control" style="max-width:70px;" /> from @Model.EventTicketPurchaseLimit
+                            <input asp-for="@amount" id="@itemTicket.TicketId" type="number" min="1" step="1" max="@Model.EventTicketPurchaseLimit" value="@amount" class="form-control" style="max-width:70px;" /> from @itemTicket.TicketAvailability
                         </div>
                         <div class="col-xs-4">
                             <a class="btn btn-warning pull-right" asp-controller="Cart" asp-action="Buy" asp-route-id="@itemTicket.TicketId" asp-route-amount="@amount">
@@ -95,13 +95,6 @@
         </div>
     </div>
     <div class="col-xs-2">
-        @*<a class="btn btn-warning pull-right" asp-controller="Cart" asp-action="Buy" asp-route-id="@Model.EventId">
-                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add to Cart
-            </a>
-            <div class="section" style="padding-bottom:20px;">
-                <div>
-                </div>
-            </div>*@
     </div>
 </div>
 <div style="width:100%;border-top:1px solid silver">

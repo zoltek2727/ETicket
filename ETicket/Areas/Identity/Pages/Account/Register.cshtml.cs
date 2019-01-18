@@ -40,6 +40,10 @@ namespace ETicket.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "User Name")]
+            public string UserName { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -54,6 +58,18 @@ namespace ETicket.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string UserFirstname { get; set; }
+            public string UserSurname { get; set; }
+            public DateTime? UserBirthdate { get; set; }
+            public string UserCity { get; set; }
+            public string UserAddress { get; set; }
+            public string UserPhone { get; set; }
+            public string UserSex { get; set; }
+            public DateTime UserCreated { get; set; }
+            public DateTime UserLastLog { get; set; }
+            public int CountryId { get; set; }
+
         }
 
         public void OnGet(string returnUrl = null)
@@ -66,7 +82,7 @@ namespace ETicket.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

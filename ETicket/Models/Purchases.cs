@@ -7,8 +7,7 @@ namespace ETicket.Models
     {
         public int PurchaseId { get; set; }
         public DateTime PurchaseTicketDate { get; set; }
-        public string PurchaseSelectedRow { get; set; }
-        public string PurchaseSelectedRowSeat { get; set; }
+        public int PurchaseAmount { get; set; }
         public string Id { get; set; }
         public int TicketId { get; set; }
         public int DeliveryId { get; set; }

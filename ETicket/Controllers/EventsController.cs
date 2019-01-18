@@ -32,6 +32,8 @@ namespace ETicket.Controllers
                 .Include(t=>t.Tour)
                     .ThenInclude(p=>p.Performer)
                         .ThenInclude(p=>p.PerformerCategory)
+                .Include(p=>p.PhotoEvents)
+                    .ThenInclude(p=>p.Photo)
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -114,6 +116,8 @@ namespace ETicket.Controllers
                 .Include(e => e.Tour)
                     .ThenInclude(p=>p.Performer)
                 .Include(t=>t.Tickets)
+                .Include(p => p.PhotoEvents)
+                    .ThenInclude(p => p.Photo)
                 .FirstOrDefaultAsync(m => m.EventId == id);
             if (events == null)
             {

@@ -8,9 +8,10 @@ namespace ETicket.Models
         public Events()
         {
             Tickets = new HashSet<Tickets>();
-    }
+            PhotoEvents = new HashSet<PhotoEvents>();
+        }
 
-    public int EventId { get; set; }
+        public int EventId { get; set; }
         public string EventName { get; set; }
         public string EventDescription { get; set; }
         public DateTime EventStart { get; set; }
@@ -22,5 +23,6 @@ namespace ETicket.Models
         public Places Place { get; set; }
         public Tours Tour { get; set; }
         public ICollection<Tickets> Tickets { get; set; }
+        public ICollection<PhotoEvents> PhotoEvents { get; set; }
     }
 }

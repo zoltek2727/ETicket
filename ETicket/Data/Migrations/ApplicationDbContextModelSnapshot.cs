@@ -19,7 +19,7 @@ namespace ETicket.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("ETicketAngular.Models.Cities", b =>
+            modelBuilder.Entity("ETicket.Models.Cities", b =>
                 {
                     b.Property<int>("CityId")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Countries", b =>
+            modelBuilder.Entity("ETicket.Models.Countries", b =>
                 {
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Deliveries", b =>
+            modelBuilder.Entity("ETicket.Models.Deliveries", b =>
                 {
                     b.Property<int>("DeliveryId")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("Deliveries");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Events", b =>
+            modelBuilder.Entity("ETicket.Models.Events", b =>
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
@@ -92,85 +92,20 @@ namespace ETicket.Data.Migrations
 
                     b.Property<int>("EventTicketPurchaseLimit");
 
-                    b.Property<int?>("HotelReservationId");
-
                     b.Property<int>("PlaceId");
 
                     b.Property<int?>("TourId");
 
-                    b.Property<int?>("TransportReservationId");
-
                     b.HasKey("EventId");
-
-                    b.HasIndex("HotelReservationId");
 
                     b.HasIndex("PlaceId");
 
                     b.HasIndex("TourId");
 
-                    b.HasIndex("TransportReservationId");
-
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.HotelReservations", b =>
-                {
-                    b.Property<int>("HotelReservationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EventId");
-
-                    b.Property<DateTime>("HotelReservationEnd")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("HotelReservationStart")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("RoomId");
-
-                    b.HasKey("HotelReservationId");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("HotelReservations");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Hotels", b =>
-                {
-                    b.Property<int>("HotelId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CityId");
-
-                    b.Property<string>("HotelAddress")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("HotelDescription")
-                        .HasMaxLength(500);
-
-                    b.Property<string>("HotelName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("HotelPhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(12);
-
-                    b.Property<int>("HotelRoomsNumber");
-
-                    b.HasKey("HotelId");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("Hotels");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.PerformerCategories", b =>
+            modelBuilder.Entity("ETicket.Models.PerformerCategories", b =>
                 {
                     b.Property<int>("PerformerCategoryId")
                         .ValueGeneratedOnAdd()
@@ -185,7 +120,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("PerformerCategories");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Performers", b =>
+            modelBuilder.Entity("ETicket.Models.Performers", b =>
                 {
                     b.Property<int>("PerformerId")
                         .ValueGeneratedOnAdd()
@@ -204,7 +139,43 @@ namespace ETicket.Data.Migrations
                     b.ToTable("Performers");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Places", b =>
+            modelBuilder.Entity("ETicket.Models.PhotoEvents", b =>
+                {
+                    b.Property<int>("PhotoEventId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EventId");
+
+                    b.Property<bool>("PhotoEventDefault");
+
+                    b.Property<int>("PhotoId");
+
+                    b.HasKey("PhotoEventId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("PhotoId");
+
+                    b.ToTable("PhotoEvents");
+                });
+
+            modelBuilder.Entity("ETicket.Models.Photos", b =>
+                {
+                    b.Property<int>("PhotoId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.HasKey("PhotoId");
+
+                    b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("ETicket.Models.Places", b =>
                 {
                     b.Property<int>("PlaceId")
                         .ValueGeneratedOnAdd()
@@ -233,7 +204,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("Places");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Purchases", b =>
+            modelBuilder.Entity("ETicket.Models.Purchases", b =>
                 {
                     b.Property<int>("PurchaseId")
                         .ValueGeneratedOnAdd()
@@ -241,117 +212,27 @@ namespace ETicket.Data.Migrations
 
                     b.Property<int>("DeliveryId");
 
-                    b.Property<int?>("HotelReservationId");
-
                     b.Property<string>("Id");
 
-                    b.Property<string>("PurchaseSelectedRow")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("PurchaseSelectedRowSeat")
-                        .HasMaxLength(10);
+                    b.Property<int>("PurchaseAmount");
 
                     b.Property<DateTime>("PurchaseTicketDate")
                         .HasColumnType("datetime");
 
-                    b.Property<int>("ReliefId");
-
                     b.Property<int>("TicketId");
-
-                    b.Property<int?>("TransportReservationId");
 
                     b.HasKey("PurchaseId");
 
                     b.HasIndex("DeliveryId");
 
-                    b.HasIndex("HotelReservationId");
-
                     b.HasIndex("Id");
 
-                    b.HasIndex("ReliefId");
-
                     b.HasIndex("TicketId");
-
-                    b.HasIndex("TransportReservationId");
 
                     b.ToTable("Purchases");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Reliefs", b =>
-                {
-                    b.Property<int>("ReliefId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("ReliefPercent")
-                        .HasColumnType("decimal(3, 2)");
-
-                    b.Property<string>("ReliefType")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ReliefId");
-
-                    b.ToTable("Reliefs");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Rooms", b =>
-                {
-                    b.Property<int>("RoomId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("HotelId");
-
-                    b.Property<bool>("RoomAvailable");
-
-                    b.Property<int>("RoomBeds");
-
-                    b.Property<string>("RoomDescription")
-                        .HasMaxLength(500);
-
-                    b.Property<string>("RoomName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<decimal>("RoomPriceForNight")
-                        .HasColumnType("decimal(9, 2)");
-
-                    b.HasKey("RoomId");
-
-                    b.HasIndex("HotelId");
-
-                    b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Sectors", b =>
-                {
-                    b.Property<int>("SectorId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("PlaceId");
-
-                    b.Property<int>("SectorAvailability");
-
-                    b.Property<int?>("SectorCapacity");
-
-                    b.Property<string>("SectorName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<int?>("SectorRowPlaces");
-
-                    b.Property<int?>("SectorRows");
-
-                    b.HasKey("SectorId");
-
-                    b.HasIndex("PlaceId");
-
-                    b.ToTable("Sectors");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Tickets", b =>
+            modelBuilder.Entity("ETicket.Models.Tickets", b =>
                 {
                     b.Property<int>("TicketId")
                         .ValueGeneratedOnAdd()
@@ -359,7 +240,7 @@ namespace ETicket.Data.Migrations
 
                     b.Property<int>("EventId");
 
-                    b.Property<int?>("SectorId");
+                    b.Property<int>("TicketAvailability");
 
                     b.Property<string>("TicketDescription")
                         .HasMaxLength(500);
@@ -375,12 +256,10 @@ namespace ETicket.Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.HasIndex("SectorId");
-
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Tours", b =>
+            modelBuilder.Entity("ETicket.Models.Tours", b =>
                 {
                     b.Property<int>("TourId")
                         .ValueGeneratedOnAdd()
@@ -400,59 +279,6 @@ namespace ETicket.Data.Migrations
                     b.HasIndex("PerformerId");
 
                     b.ToTable("Tours");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.TransportReservations", b =>
-                {
-                    b.Property<int>("TransportReservationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CityId");
-
-                    b.Property<int>("EventId");
-
-                    b.Property<int>("TransportId");
-
-                    b.Property<string>("TransportReservationAddress")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("TransportReservationEnd")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("TransportReservationPrice");
-
-                    b.Property<DateTime>("TransportReservationStart")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("TransportReservationId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("TransportId");
-
-                    b.ToTable("TransportReservations");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Transports", b =>
-                {
-                    b.Property<int>("TransportId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TransportDescription")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("TransportName")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.HasKey("TransportId");
-
-                    b.ToTable("Transports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -626,7 +452,7 @@ namespace ETicket.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Users", b =>
+            modelBuilder.Entity("ETicket.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -665,165 +491,93 @@ namespace ETicket.Data.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Users");
+                    b.ToTable("ApplicationUser");
 
-                    b.HasDiscriminator().HasValue("Users");
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Cities", b =>
+            modelBuilder.Entity("ETicket.Models.Cities", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Countries", "Country")
+                    b.HasOne("ETicket.Models.Countries", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
                         .HasConstraintName("FK_Cities_ToCountries");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Events", b =>
+            modelBuilder.Entity("ETicket.Models.Events", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.HotelReservations", "HotelReservation")
-                        .WithMany("Events")
-                        .HasForeignKey("HotelReservationId")
-                        .HasConstraintName("FK_Events_ToHotelReservations");
-
-                    b.HasOne("ETicketAngular.Models.Places", "Place")
+                    b.HasOne("ETicket.Models.Places", "Place")
                         .WithMany("Events")
                         .HasForeignKey("PlaceId")
                         .HasConstraintName("FK_Events_ToPlaces");
 
-                    b.HasOne("ETicketAngular.Models.Tours", "Tour")
+                    b.HasOne("ETicket.Models.Tours", "Tour")
                         .WithMany("Events")
                         .HasForeignKey("TourId")
                         .HasConstraintName("FK_Events_ToTours");
-
-                    b.HasOne("ETicketAngular.Models.TransportReservations", "TransportReservation")
-                        .WithMany("Events")
-                        .HasForeignKey("TransportReservationId")
-                        .HasConstraintName("FK_Events_ToTransportReservations");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.HotelReservations", b =>
+            modelBuilder.Entity("ETicket.Models.Performers", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Events", "Event")
-                        .WithMany("HotelReservations")
-                        .HasForeignKey("EventId")
-                        .HasConstraintName("FK_HotelReservations_ToEvents");
-
-                    b.HasOne("ETicketAngular.Models.Rooms", "Room")
-                        .WithMany("HotelReservations")
-                        .HasForeignKey("RoomId")
-                        .HasConstraintName("FK_HotelReservations_ToRooms");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Hotels", b =>
-                {
-                    b.HasOne("ETicketAngular.Models.Cities", "City")
-                        .WithMany("Hotels")
-                        .HasForeignKey("CityId")
-                        .HasConstraintName("FK_Hotels_ToCities");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Performers", b =>
-                {
-                    b.HasOne("ETicketAngular.Models.PerformerCategories", "PerformerCategory")
+                    b.HasOne("ETicket.Models.PerformerCategories", "PerformerCategory")
                         .WithMany("Performers")
                         .HasForeignKey("PerformerCategoryId")
                         .HasConstraintName("FK_Performers_ToPerformerCategories");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Places", b =>
+            modelBuilder.Entity("ETicket.Models.PhotoEvents", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Cities", "City")
+                    b.HasOne("ETicket.Models.Events", "Event")
+                        .WithMany("PhotoEvents")
+                        .HasForeignKey("EventId")
+                        .HasConstraintName("FK_PhotoEvents_ToEvents");
+
+                    b.HasOne("ETicket.Models.Photos", "Photo")
+                        .WithMany("PhotoEvents")
+                        .HasForeignKey("PhotoId")
+                        .HasConstraintName("FK_PhotoEvents_ToPhotos");
+                });
+
+            modelBuilder.Entity("ETicket.Models.Places", b =>
+                {
+                    b.HasOne("ETicket.Models.Cities", "City")
                         .WithMany("Places")
                         .HasForeignKey("CityId")
                         .HasConstraintName("FK_Places_ToCities");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Purchases", b =>
+            modelBuilder.Entity("ETicket.Models.Purchases", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Deliveries", "Delivery")
+                    b.HasOne("ETicket.Models.Deliveries", "Delivery")
                         .WithMany("Purchases")
                         .HasForeignKey("DeliveryId")
                         .HasConstraintName("FK_Purchases_ToDeliveries");
 
-                    b.HasOne("ETicketAngular.Models.HotelReservations", "HotelReservation")
-                        .WithMany("Purchases")
-                        .HasForeignKey("HotelReservationId")
-                        .HasConstraintName("FK_Purchases_ToHotelReservations");
-
-                    b.HasOne("ETicketAngular.Models.Users", "User")
+                    b.HasOne("ETicket.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Purchases")
                         .HasForeignKey("Id")
-                        .HasConstraintName("FK_Purchases_ToUsers");
+                        .HasConstraintName("FK_Purchases_ToApplicationUsers");
 
-                    b.HasOne("ETicketAngular.Models.Reliefs", "Relief")
-                        .WithMany("Purchases")
-                        .HasForeignKey("ReliefId")
-                        .HasConstraintName("FK_Purchases_ToReliefs");
-
-                    b.HasOne("ETicketAngular.Models.Tickets", "Ticket")
+                    b.HasOne("ETicket.Models.Tickets", "Ticket")
                         .WithMany("Purchases")
                         .HasForeignKey("TicketId")
                         .HasConstraintName("FK_Purchases_ToTickets");
-
-                    b.HasOne("ETicketAngular.Models.TransportReservations", "TransportReservation")
-                        .WithMany("Purchases")
-                        .HasForeignKey("TransportReservationId")
-                        .HasConstraintName("FK_Purchases_ToTransportReservations");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Rooms", b =>
+            modelBuilder.Entity("ETicket.Models.Tickets", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Hotels", "Hotel")
-                        .WithMany("Rooms")
-                        .HasForeignKey("HotelId")
-                        .HasConstraintName("FK_Rooms_ToHotels");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Sectors", b =>
-                {
-                    b.HasOne("ETicketAngular.Models.Places", "Place")
-                        .WithMany("Sectors")
-                        .HasForeignKey("PlaceId")
-                        .HasConstraintName("FK_Sectors_ToPlaces");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.Tickets", b =>
-                {
-                    b.HasOne("ETicketAngular.Models.Events", "Event")
+                    b.HasOne("ETicket.Models.Events", "Event")
                         .WithMany("Tickets")
                         .HasForeignKey("EventId")
                         .HasConstraintName("FK_Tickets_ToEvents");
-
-                    b.HasOne("ETicketAngular.Models.Sectors", "Sector")
-                        .WithMany("Tickets")
-                        .HasForeignKey("SectorId")
-                        .HasConstraintName("FK_Tickets_ToSectors");
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Tours", b =>
+            modelBuilder.Entity("ETicket.Models.Tours", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Performers", "Performer")
+                    b.HasOne("ETicket.Models.Performers", "Performer")
                         .WithMany("Tours")
                         .HasForeignKey("PerformerId")
                         .HasConstraintName("FK_Tours_ToPerformers");
-                });
-
-            modelBuilder.Entity("ETicketAngular.Models.TransportReservations", b =>
-                {
-                    b.HasOne("ETicketAngular.Models.Cities", "City")
-                        .WithMany("TransportReservations")
-                        .HasForeignKey("CityId")
-                        .HasConstraintName("FK_TransportReservations_ToCities");
-
-                    b.HasOne("ETicketAngular.Models.Events", "Event")
-                        .WithMany("TransportReservations")
-                        .HasForeignKey("EventId")
-                        .HasConstraintName("FK_TransportReservations_ToEvents");
-
-                    b.HasOne("ETicketAngular.Models.Transports", "Transport")
-                        .WithMany("TransportReservations")
-                        .HasForeignKey("TransportId")
-                        .HasConstraintName("FK_TransportReservations_ToTransports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -871,9 +625,9 @@ namespace ETicket.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ETicketAngular.Models.Users", b =>
+            modelBuilder.Entity("ETicket.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("ETicketAngular.Models.Countries", "Country")
+                    b.HasOne("ETicket.Models.Countries", "Country")
                         .WithMany("Users")
                         .HasForeignKey("CountryId")
                         .HasConstraintName("FK_Users_ToCountries");
