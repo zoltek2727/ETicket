@@ -14,11 +14,11 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
-    $('#cartAmount').get({
-        source: '/Cart/GetCartAmount'
-    });
-});
+//$(document).ready(function () {
+//    $('#cartamount').get({
+//        source: '/Cart/GetCartAmount'
+//    });
+//});
 
 $(document).ready(function () {
     //FANCYBOX
@@ -35,7 +35,7 @@ $.ajax({
     contentType: "application/json",
     dataType: "json",
     success: function (response) {
-        var cartAmount = $("#cartAmount");
+        var cartAmount = $("#cartamount");
         cartAmount.empty();
         $('<a href="/Cart/Index" method="get">').append('<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cart <span class="badge">' + response + '</span>').appendTo(cartAmount);
     },
@@ -53,7 +53,7 @@ $.ajax({
         var countriesDDL = $("#countriesDDL");
         countriesDDL.empty();
         $.each(response, function (i, item) {
-            $('<li>').append('<a href="/Events/Index?eventFilter=' + item.countryId + '"><span class="glyphicon glyphicon-hand-right"></span> ' + item.countryName + '</option>').appendTo(countriesDDL);
+            $('<li>').append('<a href="/Events/Index?countryFilter=' + item.countryId + '">' + item.countryName + '</option>').appendTo(countriesDDL);
         });
     },
     failure: function (response) {
@@ -70,7 +70,7 @@ $.ajax({
         var eventsDDL = $("#eventsDDL");
         eventsDDL.empty();
         $.each(response, function (i, item) {
-            $('<li>').append('<a href="/Events/Index?categoryFilter=' + item.performerCategoryId + '"><span class="glyphicon glyphicon-hand-right"></span> ' + item.performerCategoryName + '</option>').appendTo(eventsDDL);
+            $('<li>').append('<a href="/Events/Index?categoryFilter=' + item.performerCategoryId + '">' + item.performerCategoryName + '</option>').appendTo(eventsDDL);
         });
     },
     failure: function (response) {

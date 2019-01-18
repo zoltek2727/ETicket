@@ -39,7 +39,7 @@ namespace ETicket.Controllers
 
             if (cart != null)
             {
-                var tickets = _context.Tickets.AsNoTracking();
+                var tickets = _context.Tickets.Include(e=>e.Event).AsNoTracking();
                                              
                 ViewBag.total = cart.Sum(item => item.Ticket.TicketPrice * item.Quantity);
                 return View(await tickets.ToListAsync());
@@ -72,11 +72,11 @@ namespace ETicket.Controllers
         }
 
         [Route("Buy/{id}/{amount}")]
-        public IActionResult Buy(int id, string amount)
+        public IActionResult Buy(int id, int amount)
         {
-            if(string.IsNullOrWhiteSpace(amount))
+            if(amount==0)
             {
-                amount = "1";
+                amount = 1;
             }
 
             Tickets ticketModel = new Tickets();
@@ -110,11 +110,13 @@ namespace ETicket.Controllers
 
             if (cart != null)
             {
-                var products = _context.Tickets.AsNoTracking()
+                var tickets = _context.Tickets.AsNoTracking()
                                                 .AsQueryable();
 
                 ViewBag.total = cart.Sum(item => item.Ticket.TicketPrice * item.Quantity);
-                return View(products);
+                ViewBag.listOfDeliveries = _context.Deliveries.OrderBy(d => d.DeliveryType).ToList();
+
+                return View(tickets);
             }
 
             return View();
@@ -130,7 +132,7 @@ namespace ETicket.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Purchase()
+        public async Task<IActionResult> Purchase(int purchaseID)
         {
             List<ShoppingCart> cart = SessionHelper.GetObjectFromJson<List<ShoppingCart>>(HttpContext.Session, "cart");
 

@@ -28,6 +28,17 @@
                         <br />
                     </form>
                 }
+                <br />
+                <h4><span class="glyphicon glyphicon-flag" aria-hidden="true"></span> Countries</h4>
+                @foreach (var item in ViewBag.ListOfCountries)
+                {
+                    <form method="get">
+                        <button type="submit" class="btn-link" name="countryFilter" asp-for="@Model.RouteValue["countryFilter"]" value="@item.CountryId">
+                            @item.CountryName
+                        </button>
+                        <br />
+                    </form>
+                }
             </div>
         </div>
         <div class="col-xs-10" id="main">

@@ -22,11 +22,13 @@ namespace ETicket.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index(string filter, string categoryFilter, int page = 1, string sortExpression = "EventName")
+        public async Task<IActionResult> Index(string filter, string categoryFilter, string countryFilter, int page = 1, string sortExpression = "EventName")
         {
             var qry = _context.Events
                 .Include(t=>t.Tickets)
                 .Include(p=>p.Place)
+                    .ThenInclude(c=>c.City)
+                        .ThenInclude(c=>c.Country)
                 .Include(t=>t.Tour)
                     .ThenInclude(p=>p.Performer)
                         .ThenInclude(p=>p.PerformerCategory)
@@ -43,12 +45,25 @@ namespace ETicket.Controllers
                 {
                     qry = qry.Where(p => p.EventName.Contains(filter)).Where(p => p.Tour.Performer.PerformerCategory.PerformerCategoryId == Convert.ToInt32(categoryFilter));
                 }
+
+                if (string.IsNullOrWhiteSpace(countryFilter))
+                {
+                    qry = qry.Where(p => p.EventName.Contains(filter));
+                }
+                else
+                {
+                    qry = qry.Where(p => p.EventName.Contains(filter)).Where(p => p.Place.City.Country.CountryId == Convert.ToInt32(countryFilter));
+                }
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace(categoryFilter))
                 {
                     qry = qry.Where(p => p.Tour.Performer.PerformerCategory.PerformerCategoryId == Convert.ToInt32(categoryFilter));
+                }
+                if (!string.IsNullOrWhiteSpace(countryFilter))
+                {
+                    qry = qry.Where(p => p.Place.City.Country.CountryId == Convert.ToInt32(countryFilter));
                 }
             }
 
@@ -57,10 +72,12 @@ namespace ETicket.Controllers
             model.RouteValue = new RouteValueDictionary {
                 { "filter", filter},
                 { "categoryFilter", categoryFilter },
+                { "countryFilter", countryFilter },
                 { "sortExpression", sortExpression }
             };
 
             ViewBag.ListOfCategories = _context.PerformerCategories.OrderBy(c => c.PerformerCategoryName).ToList();
+            ViewBag.ListOfCountries = _context.Countries.OrderBy(c => c.CountryName).ToList();
 
             return View(model);
         }
@@ -91,13 +108,11 @@ namespace ETicket.Controllers
             }
 
             var events = await _context.Events
-                .Include(e => e.HotelReservation)
                 .Include(e => e.Place)
                     .ThenInclude(c=>c.City)
                         .ThenInclude(c=>c.Country)
                 .Include(e => e.Tour)
                     .ThenInclude(p=>p.Performer)
-                .Include(e => e.TransportReservation)
                 .Include(t=>t.Tickets)
                 .FirstOrDefaultAsync(m => m.EventId == id);
             if (events == null)
@@ -111,10 +126,8 @@ namespace ETicket.Controllers
         // GET: Events/Create
         public IActionResult Create()
         {
-            ViewData["HotelReservationId"] = new SelectList(_context.HotelReservations, "HotelReservationId", "HotelReservationId");
             ViewData["PlaceId"] = new SelectList(_context.Places, "PlaceId", "PlaceAddress");
             ViewData["TourId"] = new SelectList(_context.Tours, "TourId", "TourName");
-            ViewData["TransportReservationId"] = new SelectList(_context.TransportReservations, "TransportReservationId", "TransportReservationAddress");
             return View();
         }
 
@@ -123,7 +136,7 @@ namespace ETicket.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,EventName,EventDescription,EventStart,EventEnd,EventTicketPurchaseLimit,PlaceId,TourId,HotelReservationId,TransportReservationId")] Events events)
+        public async Task<IActionResult> Create([Bind("EventId,EventName,EventDescription,EventStart,EventEnd,EventTicketPurchaseLimit,PlaceId,TourId")] Events events)
         {
             if (ModelState.IsValid)
             {
@@ -131,10 +144,8 @@ namespace ETicket.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HotelReservationId"] = new SelectList(_context.HotelReservations, "HotelReservationId", "HotelReservationId", events.HotelReservationId);
             ViewData["PlaceId"] = new SelectList(_context.Places, "PlaceId", "PlaceAddress", events.PlaceId);
             ViewData["TourId"] = new SelectList(_context.Tours, "TourId", "TourName", events.TourId);
-            ViewData["TransportReservationId"] = new SelectList(_context.TransportReservations, "TransportReservationId", "TransportReservationAddress", events.TransportReservationId);
             return View(events);
         }
 
@@ -151,10 +162,8 @@ namespace ETicket.Controllers
             {
                 return NotFound();
             }
-            ViewData["HotelReservationId"] = new SelectList(_context.HotelReservations, "HotelReservationId", "HotelReservationId", events.HotelReservationId);
             ViewData["PlaceId"] = new SelectList(_context.Places, "PlaceId", "PlaceAddress", events.PlaceId);
             ViewData["TourId"] = new SelectList(_context.Tours, "TourId", "TourName", events.TourId);
-            ViewData["TransportReservationId"] = new SelectList(_context.TransportReservations, "TransportReservationId", "TransportReservationAddress", events.TransportReservationId);
             return View(events);
         }
 
@@ -163,7 +172,7 @@ namespace ETicket.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EventId,EventName,EventDescription,EventStart,EventEnd,EventTicketPurchaseLimit,PlaceId,TourId,HotelReservationId,TransportReservationId")] Events events)
+        public async Task<IActionResult> Edit(int id, [Bind("EventId,EventName,EventDescription,EventStart,EventEnd,EventTicketPurchaseLimit,PlaceId,TourId")] Events events)
         {
             if (id != events.EventId)
             {
@@ -190,10 +199,8 @@ namespace ETicket.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HotelReservationId"] = new SelectList(_context.HotelReservations, "HotelReservationId", "HotelReservationId", events.HotelReservationId);
             ViewData["PlaceId"] = new SelectList(_context.Places, "PlaceId", "PlaceAddress", events.PlaceId);
             ViewData["TourId"] = new SelectList(_context.Tours, "TourId", "TourName", events.TourId);
-            ViewData["TransportReservationId"] = new SelectList(_context.TransportReservations, "TransportReservationId", "TransportReservationAddress", events.TransportReservationId);
             return View(events);
         }
 
@@ -206,10 +213,8 @@ namespace ETicket.Controllers
             }
 
             var events = await _context.Events
-                .Include(e => e.HotelReservation)
                 .Include(e => e.Place)
                 .Include(e => e.Tour)
-                .Include(e => e.TransportReservation)
                 .FirstOrDefaultAsync(m => m.EventId == id);
             if (events == null)
             {

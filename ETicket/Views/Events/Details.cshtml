@@ -82,7 +82,7 @@
                             <b>@Html.DisplayFor(modelItem => itemTicket.TicketPrice)$</b>
                         </div>
                         <div class="col-xs-2">
-                            <input id="@itemTicket.TicketId" type="number" min="1" step="1" max="@Model.EventTicketPurchaseLimit" value="@amount" class="form-control" style="max-width:70px;" /> from @Model.EventTicketPurchaseLimit
+                            <input asp-for="@amount" id="@itemTicket.TicketId" type="number" min="1" step="1" max="@Model.EventTicketPurchaseLimit" value="@amount" class="form-control" style="max-width:70px;" /> from @Model.EventTicketPurchaseLimit
                         </div>
                         <div class="col-xs-4">
                             <a class="btn btn-warning pull-right" asp-controller="Cart" asp-action="Buy" asp-route-id="@itemTicket.TicketId" asp-route-amount="@amount">
@@ -121,23 +121,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 
     <script type="text/javascript">
-        function updateLabel() {
-            var number = parseInt($(this).find('.Price').text(), 10);
-            var number2 = parseInt($(this).find('.Quantity').text(), 10);
+        function updatePostID(val) {
+            document.getElementById('PostID').value = val;
 
-            var Total = number * number2;
-            document.getElementById('SubTotal').innerHTML = Total.toString();
+            //and probably call document.forms[0].submit();
         }
-
-        $(document).ready(function () {
-            $('input').change(function () {
-
-                alert($(this).val());
-                alert($(this).attr('id'));
-                alert($('#onePrice').innerHTML())
-
-                $('#divResult').html(result);
-            });
-        });
     </script>
 }

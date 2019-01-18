@@ -21,7 +21,7 @@ namespace ETicket.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Events.Include(e => e.HotelReservation).Include(e => e.Place).Include(e => e.Tour).ThenInclude(p=>p.Performer).Include(e => e.TransportReservation).Include(t=>t.Tickets);
+            var applicationDbContext = _context.Events.Include(e => e.Place).Include(e => e.Tour).ThenInclude(p=>p.Performer).Include(t=>t.Tickets);
             return View(await applicationDbContext.ToListAsync());
         }
 
