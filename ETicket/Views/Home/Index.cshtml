@@ -1,0 +1,133 @@
+﻿@model IEnumerable<ETicket.Models.Events>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<br />
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm-4 mi">
+            <div class="box miniaturka">
+                <a asp-controller="Products" asp-action="Index"> <img class="img-responsive" src="~/images/laptop-lenovo-thinkpad-e580-20ks007gpb_1250430_3710464_350x350w50.jpg" /></a>
+                <h3>LAPTOPS</h3>
+                <p>Minimum formalities. Quick decision.</p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box miniaturka">
+                <a asp-controller="Products" asp-action="Index"><img class="img-responsive" src="~/images/monitor-lg-24mp88hv_657406_1707624_350x350w50.jpg" /></a>
+                <h3>MONITORS</h3>
+                <p> Search, compare prices and save!</p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box miniaturka">
+                <a asp-controller="Products" asp-action="Index"><img class="img-responsive" src="~/images/win10-photo.png" /></a>
+                <h3>OS</h3>
+                <p>Windows 10 is even better thanks to innovative and innovative solutions.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container text-center">
+    <h1>QUALITY</h1>
+    <p>Discover the best Laptop Computers in Best Sellers</p>
+</div>
+<br />
+<div id="myCarousel2" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel2" data-slide-to="1"></li>
+        <li data-target="#myCarousel2" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        @{
+            int i = 0;
+            foreach (var item in Model)
+            {
+
+                @if (i == 0)
+                {
+                    @Html.Raw("<div class=\"item active\">");
+                }
+                else
+                {
+                    @Html.Raw("<div class=\"item\">");
+                }
+
+                <p>
+                    <div class="thumbnail" style=" width:900px; margin:0 auto; border:0;">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                @if (0 > 0)
+                                {
+                                    @*@foreach (var photoItem in item.PhotoProducts)
+                                    {
+                                        @if (photoItem.PhotoProductIsDefault)
+                                        {
+                                            <img src="@Url.Content(photoItem.Photo.PhotoUrl)" alt="" class="img-responsive" />
+                                        }
+                                    }*@
+                                }
+                                else
+                                {
+                                    <img src="~/images/emptyProduct.jpg" alt="" class="img-responsive">
+                                }
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="caption">
+                                    <h3>
+                                        <a class="label label-info" asp-controller="Events" asp-action="Details" asp-route-id="@item.EventId">
+                                            @Html.DisplayFor(modelItem => item.EventName)
+                                        </a>
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-xs-6 text-info">
+                                            <h5>
+                                                @Html.DisplayFor(modelItem => item.EventStart)
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <b>@Html.DisplayFor(modelItem => item.Place.PlaceName)</b>
+                                    <h4>@Html.DisplayFor(modelItem => item.Tour.Performer.PerformerName)</h4>
+
+                                    <br />
+                                    @{ decimal minPrice = 0;
+
+                                        foreach (var v in item.Tickets)
+                                        {
+                                            minPrice = item.Tickets.Min(a => a.TicketPrice);
+                                        }
+
+                                        <h3>
+                                            <b>Tickets available from <span class="text-success">@minPrice$</span>!</b>
+                                        </h3>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+                @if (i == 0)
+                {
+                    @Html.Raw("</div>");
+                }
+                else
+                {
+                    @Html.Raw("</div>");
+                }
+                i++;
+            }
+        }
+    </div>
+    <a class="left carousel-control" href="#myCarousel2" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel2" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>

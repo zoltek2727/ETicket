@@ -1,0 +1,143 @@
+﻿@model ETicket.Models.Events
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Events" asp-action="Index">Events</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Details</li>
+    </ol>
+</nav>
+
+<h2>Details</h2>
+<br />
+
+<a class="btn btn-default" asp-action="Index">
+    <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Back to List
+</a>
+<div class="row">
+    <div class='list-group gallery col-xs-6 '>
+        @if (1 > 1)
+        {
+            @*@foreach (var photoItem in Model.PhotoProducts)
+                {
+                    <div class="item-photo">
+                        <a class="thumbnail fancybox" rel="ligthbox" href="@Url.Content(photoItem.Photo.PhotoUrl)">
+                            @if (photoItem.PhotoProductIsDefault)
+                            {
+                                <img class="img-responsive" style="max-width:100%;" src="@Url.Content(photoItem.Photo.PhotoUrl)" alt="Image" />
+                            }
+                            else
+                            {
+                                <div class="col-xs-4">
+                                    <img class="img-responsive" style="max-width:100%;" src="@Url.Content(photoItem.Photo.PhotoUrl)" alt="Image" />
+                                </div>
+                            }
+                        </a>
+                    </div>
+                }*@
+        }
+        else
+        {
+            <img src="~/images/emptyProduct.jpg" alt="" class="img-responsive">
+        }
+    </div>
+
+    <div class="col-xs-5" style="border:0px solid gray">
+        <h1 style="margin-top:0px;">@Html.DisplayFor(model => model.EventName) <span class="glyphicon glyphicon-king"></span></h1>
+        <div class="row">
+            <div class="section col-lg-14">
+                <span class="glyphicon glyphicon-time"></span>
+                <h5 class="title-attr text-danger badge">
+                    @Html.DisplayFor(model => model.EventStart) @Html.DisplayFor(model => model.EventEnd)
+                </h5>
+            </div>
+            <div class="section col-lg-14">
+                <div class="attr2">
+                    <span class="glyphicon glyphicon-home"></span>
+                    @Html.DisplayFor(model => model.Place.PlaceName) / @Html.DisplayFor(model => model.Place.City.CityName) / @Html.DisplayFor(model => model.Place.City.Country.CountryName)
+                </div>
+            </div>
+            <br />
+            <div class="section col-lg-14">
+                <div class="text-danger text-uppercase">
+                    <span class="glyphicon glyphicon-headphones"></span>
+                    <b>@Html.DisplayFor(model => model.Tour.TourName) / @Html.DisplayFor(model => model.Tour.Performer.PerformerName) </b>
+                </div>
+            </div>
+            <br />
+            <h2>Tickets</h2>
+            @foreach (var itemTicket in Model.Tickets)
+            {
+                int amount = 1;
+                <div class="section col-lg-14">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            @Html.DisplayFor(modelItem => itemTicket.TicketName)
+                        </div>
+                        <div class="col-xs-2">
+                            <b>@Html.DisplayFor(modelItem => itemTicket.TicketPrice)$</b>
+                        </div>
+                        <div class="col-xs-2">
+                            <input id="@itemTicket.TicketId" type="number" min="1" step="1" max="@Model.EventTicketPurchaseLimit" value="@amount" class="form-control" style="max-width:70px;" /> from @Model.EventTicketPurchaseLimit
+                        </div>
+                        <div class="col-xs-4">
+                            <a class="btn btn-warning pull-right" asp-controller="Cart" asp-action="Buy" asp-route-id="@itemTicket.TicketId" asp-route-amount="@amount">
+                                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add to Cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-xs-2">
+        @*<a class="btn btn-warning pull-right" asp-controller="Cart" asp-action="Buy" asp-route-id="@Model.EventId">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add to Cart
+            </a>
+            <div class="section" style="padding-bottom:20px;">
+                <div>
+                </div>
+            </div>*@
+    </div>
+</div>
+<div style="width:100%;border-top:1px solid silver">
+    <h2>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Description
+    </h2>
+    <p style="padding:15px;">
+        <small>
+            @Html.DisplayFor(model => model.EventDescription)
+        </small>
+    </p>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+    <script type="text/javascript">
+        function updateLabel() {
+            var number = parseInt($(this).find('.Price').text(), 10);
+            var number2 = parseInt($(this).find('.Quantity').text(), 10);
+
+            var Total = number * number2;
+            document.getElementById('SubTotal').innerHTML = Total.toString();
+        }
+
+        $(document).ready(function () {
+            $('input').change(function () {
+
+                alert($(this).val());
+                alert($(this).attr('id'));
+                alert($('#onePrice').innerHTML())
+
+                $('#divResult').html(result);
+            });
+        });
+    </script>
+}
