@@ -7,9 +7,7 @@ namespace ETicket.Models
     {
         public Cities()
         {
-            Hotels = new HashSet<Hotels>();
             Places = new HashSet<Places>();
-            TransportReservations = new HashSet<TransportReservations>();
         }
 
         public int CityId { get; set; }
@@ -17,8 +15,6 @@ namespace ETicket.Models
         public int CountryId { get; set; }
 
         public Countries Country { get; set; }
-        public ICollection<Hotels> Hotels { get; set; }
         public ICollection<Places> Places { get; set; }
-        public ICollection<TransportReservations> TransportReservations { get; set; }
     }
 }

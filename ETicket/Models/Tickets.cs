@@ -14,11 +14,10 @@ namespace ETicket.Models
         public string TicketName { get; set; }
         public string TicketDescription { get; set; }
         public decimal TicketPrice { get; set; }
+        public int TicketAvailability { get; set; }
         public int EventId { get; set; }
-        public int? SectorId { get; set; }
 
         public Events Event { get; set; }
-        public Sectors Sector { get; set; }
         public ICollection<Purchases> Purchases { get; set; }
     }
 }

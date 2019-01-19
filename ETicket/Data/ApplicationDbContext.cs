@@ -22,19 +22,14 @@ namespace ETicket.Data
         public virtual DbSet<Countries> Countries { get; set; }
         public virtual DbSet<Deliveries> Deliveries { get; set; }
         public virtual DbSet<Events> Events { get; set; }
-        public virtual DbSet<HotelReservations> HotelReservations { get; set; }
-        public virtual DbSet<Hotels> Hotels { get; set; }
         public virtual DbSet<PerformerCategories> PerformerCategories { get; set; }
         public virtual DbSet<Performers> Performers { get; set; }
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<Purchases> Purchases { get; set; }
-        public virtual DbSet<Reliefs> Reliefs { get; set; }
-        public virtual DbSet<Rooms> Rooms { get; set; }
-        public virtual DbSet<Sectors> Sectors { get; set; }
         public virtual DbSet<Tickets> Tickets { get; set; }
         public virtual DbSet<Tours> Tours { get; set; }
-        public virtual DbSet<TransportReservations> TransportReservations { get; set; }
-        public virtual DbSet<Transports> Transports { get; set; }
+        public virtual DbSet<PhotoEvents> PhotoEvents { get; set; }
+        public virtual DbSet<Photos> Photos { get; set; }
         public new virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,11 +85,6 @@ namespace ETicket.Data
 
                 entity.Property(e => e.EventStart).HasColumnType("datetime");
 
-                entity.HasOne(d => d.HotelReservation)
-                    .WithMany(p => p.Events)
-                    .HasForeignKey(d => d.HotelReservationId)
-                    .HasConstraintName("FK_Events_ToHotelReservations");
-
                 entity.HasOne(d => d.Place)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.PlaceId)
@@ -105,59 +95,8 @@ namespace ETicket.Data
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.TourId)
                     .HasConstraintName("FK_Events_ToTours");
-
-                entity.HasOne(d => d.TransportReservation)
-                    .WithMany(p => p.Events)
-                    .HasForeignKey(d => d.TransportReservationId)
-                    .HasConstraintName("FK_Events_ToTransportReservations");
             });
-
-            modelBuilder.Entity<HotelReservations>(entity =>
-            {
-                entity.HasKey(e => e.HotelReservationId);
-
-                entity.Property(e => e.HotelReservationEnd).HasColumnType("datetime");
-
-                entity.Property(e => e.HotelReservationStart).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Event)
-                    .WithMany(p => p.HotelReservations)
-                    .HasForeignKey(d => d.EventId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_HotelReservations_ToEvents");
-
-                entity.HasOne(d => d.Room)
-                    .WithMany(p => p.HotelReservations)
-                    .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_HotelReservations_ToRooms");
-            });
-
-            modelBuilder.Entity<Hotels>(entity =>
-            {
-                entity.HasKey(e => e.HotelId);
-
-                entity.Property(e => e.HotelAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.HotelDescription).HasMaxLength(500);
-
-                entity.Property(e => e.HotelName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.HotelPhoneNumber)
-                    .IsRequired()
-                    .HasMaxLength(12);
-
-                entity.HasOne(d => d.City)
-                    .WithMany(p => p.Hotels)
-                    .HasForeignKey(d => d.CityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Hotels_ToCities");
-            });
-
+      
             modelBuilder.Entity<PerformerCategories>(entity =>
             {
                 entity.HasKey(e => e.PerformerCategoryId);
@@ -180,6 +119,35 @@ namespace ETicket.Data
                     .HasForeignKey(d => d.PerformerCategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Performers_ToPerformerCategories");
+            });
+
+            modelBuilder.Entity<PhotoEvents>(entity =>
+            {
+                entity.HasKey(e => e.PhotoEventId);
+
+                entity.Property(e => e.PhotoEventDefault)
+                    .IsRequired();
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.PhotoEvents)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PhotoEvents_ToEvents");
+
+                entity.HasOne(d => d.Photo)
+                    .WithMany(p => p.PhotoEvents)
+                    .HasForeignKey(d => d.PhotoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PhotoEvents_ToPhotos");
+            });
+
+            modelBuilder.Entity<Photos>(entity =>
+            {
+                entity.HasKey(e => e.PhotoId);
+
+                entity.Property(e => e.PhotoUrl)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<Places>(entity =>
@@ -209,10 +177,6 @@ namespace ETicket.Data
             {
                 entity.HasKey(e => e.PurchaseId);
 
-                entity.Property(e => e.PurchaseSelectedRow).HasMaxLength(10);
-
-                entity.Property(e => e.PurchaseSelectedRowSeat).HasMaxLength(10);
-
                 entity.Property(e => e.PurchaseTicketDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Delivery)
@@ -221,77 +185,17 @@ namespace ETicket.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Purchases_ToDeliveries");
 
-                entity.HasOne(d => d.HotelReservation)
-                    .WithMany(p => p.Purchases)
-                    .HasForeignKey(d => d.HotelReservationId)
-                    .HasConstraintName("FK_Purchases_ToHotelReservations");
-
-                entity.HasOne(d => d.Relief)
-                    .WithMany(p => p.Purchases)
-                    .HasForeignKey(d => d.ReliefId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Purchases_ToReliefs");
-
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.Purchases)
                     .HasForeignKey(d => d.TicketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Purchases_ToTickets");
 
-                entity.HasOne(d => d.TransportReservation)
-                    .WithMany(p => p.Purchases)
-                    .HasForeignKey(d => d.TransportReservationId)
-                    .HasConstraintName("FK_Purchases_ToTransportReservations");
-
                 entity.HasOne(d => d.ApplicationUser)
                     .WithMany(p => p.Purchases)
                     .HasForeignKey(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Purchases_ToApplicationUsers");
-            });
-
-            modelBuilder.Entity<Reliefs>(entity =>
-            {
-                entity.HasKey(e => e.ReliefId);
-
-                entity.Property(e => e.ReliefPercent).HasColumnType("decimal(3, 2)");
-
-                entity.Property(e => e.ReliefType)
-                    .IsRequired()
-                    .HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<Rooms>(entity =>
-            {
-                entity.HasKey(e => e.RoomId);
-
-                entity.Property(e => e.RoomDescription).HasMaxLength(500);
-
-                entity.Property(e => e.RoomName)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.RoomPriceForNight).HasColumnType("decimal(9, 2)");
-
-                entity.HasOne(d => d.Hotel)
-                    .WithMany(p => p.Rooms)
-                    .HasForeignKey(d => d.HotelId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Rooms_ToHotels");
-            });
-
-            modelBuilder.Entity<Sectors>(entity =>
-            {
-                entity.HasKey(e => e.SectorId);
-
-                entity.Property(e => e.SectorName)
-                    .IsRequired()
-                    .HasMaxLength(20);
-
-                entity.HasOne(d => d.Place)
-                    .WithMany(p => p.Sectors)
-                    .HasForeignKey(d => d.PlaceId)
-                    .HasConstraintName("FK_Sectors_ToPlaces");
             });
 
             modelBuilder.Entity<Tickets>(entity =>
@@ -311,11 +215,6 @@ namespace ETicket.Data
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tickets_ToEvents");
-
-                entity.HasOne(d => d.Sector)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.SectorId)
-                    .HasConstraintName("FK_Tickets_ToSectors");
             });
 
             modelBuilder.Entity<Tours>(entity =>
@@ -333,48 +232,6 @@ namespace ETicket.Data
                     .HasForeignKey(d => d.PerformerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Tours_ToPerformers");
-            });
-
-            modelBuilder.Entity<TransportReservations>(entity =>
-            {
-                entity.HasKey(e => e.TransportReservationId);
-
-                entity.Property(e => e.TransportReservationAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.TransportReservationEnd).HasColumnType("datetime");
-
-                entity.Property(e => e.TransportReservationStart).HasColumnType("datetime");
-
-                entity.HasOne(d => d.City)
-                    .WithMany(p => p.TransportReservations)
-                    .HasForeignKey(d => d.CityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransportReservations_ToCities");
-
-                entity.HasOne(d => d.Event)
-                    .WithMany(p => p.TransportReservations)
-                    .HasForeignKey(d => d.EventId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransportReservations_ToEvents");
-
-                entity.HasOne(d => d.Transport)
-                    .WithMany(p => p.TransportReservations)
-                    .HasForeignKey(d => d.TransportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransportReservations_ToTransports");
-            });
-
-            modelBuilder.Entity<Transports>(entity =>
-            {
-                entity.HasKey(e => e.TransportId);
-
-                entity.Property(e => e.TransportDescription).HasMaxLength(50);
-
-                entity.Property(e => e.TransportName)
-                    .IsRequired()
-                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<ApplicationUser>(entity =>

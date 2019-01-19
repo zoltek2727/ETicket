@@ -1,0 +1,91 @@
+﻿@model ReflectionIT.Mvc.Paging.PagingList<ETicket.Models.Purchases>
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Purchases</h2>
+<br />
+
+@*<form method="get" class="form-inline">
+    <input name="filter" id="filterPurchase" class="form-control" placeholder="Search for purchase"
+           value="@Model.RouteValue["Filter"]" />
+    <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+    </button>
+</form>*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.SortableHeaderFor(model => model.Ticket.Event.EventName)
+            </th>
+            <th>
+                @Html.SortableHeaderFor(model=>model.Ticket.TicketPrice)
+            </th>
+            <th>
+                @Html.SortableHeaderFor(model=>model.Ticket.Event.EventStart)
+            </th>
+            <th>
+                @Html.SortableHeaderFor(model => model.PurchaseAmount)
+            </th>
+            <th>
+                @Html.SortableHeaderFor(model => model.PurchaseTicketDate)
+            </th>
+            <th>
+                @Html.SortableHeaderFor(model => model.Ticket.TicketName)
+            </th>
+            <th>
+                Total
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ticket.Event.EventName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=>item.Ticket.TicketPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=>item.Ticket.Event.EventStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=>item.PurchaseTicketDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=>item.Ticket.TicketName)
+                </td>
+                <td>
+                    @(item.Ticket.TicketPrice * item.PurchaseAmount)$
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model" />
+</nav>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#filterPurchase').autocomplete({
+                source: '/Purchases/Search'
+            });
+        });
+    </script>
+}

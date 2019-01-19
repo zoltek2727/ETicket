@@ -7,12 +7,11 @@ namespace ETicket.Models
     {
         public Events()
         {
-            HotelReservations = new HashSet<HotelReservations>();
             Tickets = new HashSet<Tickets>();
-            TransportReservations = new HashSet<TransportReservations>();
-    }
+            PhotoEvents = new HashSet<PhotoEvents>();
+        }
 
-    public int EventId { get; set; }
+        public int EventId { get; set; }
         public string EventName { get; set; }
         public string EventDescription { get; set; }
         public DateTime EventStart { get; set; }
@@ -20,15 +19,10 @@ namespace ETicket.Models
         public int EventTicketPurchaseLimit { get; set; }
         public int PlaceId { get; set; }
         public int? TourId { get; set; }
-        public int? HotelReservationId { get; set; }
-        public int? TransportReservationId { get; set; }
 
-        public HotelReservations HotelReservation { get; set; }
         public Places Place { get; set; }
         public Tours Tour { get; set; }
-        public TransportReservations TransportReservation { get; set; }
-        public ICollection<HotelReservations> HotelReservations { get; set; }
         public ICollection<Tickets> Tickets { get; set; }
-        public ICollection<TransportReservations> TransportReservations { get; set; }
+        public ICollection<PhotoEvents> PhotoEvents { get; set; }
     }
 }

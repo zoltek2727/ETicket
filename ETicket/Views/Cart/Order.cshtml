@@ -1,0 +1,123 @@
+﻿@model IEnumerable<ETicket.Models.Events>
+
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Cart" asp-action="Index">Cart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Order</li>
+    </ol>
+</nav>
+<br />
+@if (ViewBag.cart != null)
+{
+    <h2>Your order</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.cart)
+                        {
+                        <tr>
+                            <td class="col-sm-6 col-md-6">
+                                @foreach (var ev in Model.Where(x => x.EventId == item.Ticket.EventId))
+                                {
+                                    <h4>@ev.EventName</h4>
+                                }
+                            </td>
+                            <td class="col-sm-4 col-md-4">
+                                <div class="media">
+                                    @*@foreach (var photo in Model.Where(x => x.ProductId == item.Product.ProductId))
+                    {
+                @if (1 > 1)
+                {
+                    @foreach (var photo2 in photo.PhotoProducts.Where(p => p.ProductId == item.Product.ProductId))
+                        {
+                            @if (photo2.PhotoProductIsDefault)
+                            {
+                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="@photo2.Photo.PhotoUrl" style="width: 72px; height: 72px;"> </a>
+                            }
+                        }
+                }
+                else
+                {
+                    <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/images/emptyProduct.jpg" style="width: 80px; height: 80px;"> </a>
+                }*@
+
+                                    <div class="media-body">
+                                        <h4 class="media-heading">@item.Ticket.TicketName</h4>
+                                        @*<h4 class="media-heading"><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.ProductId">@item.Product.ProductName</a></h4>
+                    <h5 class="media-heading"> code <b>@item.Product.ProductCode</b></h5>*@
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-sm-1 col-md-1" style="text-align: center">
+                                <h5>@item.Quantity</h5>
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center">
+                                @item.Ticket.TicketPrice$
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center"><strong id="@item.Ticket.TicketId">@(item.Ticket.TicketPrice * item.Quantity)$</strong></td>
+                        </tr>
+                        }
+
+                        <tr>
+                            <td>
+                                <a class="btn btn-default" asp-controller="Cart" asp-action="Index">
+                                    <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> Return to cart
+                                </a>
+                            </td>
+                            <td>
+                            </td>
+                            @*<td align="right">
+                                <h3>
+                                    Delivery:
+                                </h3> <br />
+                                @{ int value = 0;}
+                                    @*<select asp-for="@value" id="myList" class="form-control">
+                                        @foreach (var item in ViewBag.listOfDeliveries)
+                                        {
+                                            <option value="@item.DeliveryId" onchange="@value=@item.DeliveryId">
+                                                @item.DeliveryType - @item.Price$
+                                            </option>
+                                        }
+                                    </select>
+                                
+                            </td>*@
+                            <td align="right" colspan="3">
+                                <h3>
+                                    Sum:
+                                    @ViewBag.Total$
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-primary" asp-controller="Cart" asp-action="Purchase">
+                                        <span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Purchase
+                                    </a>
+                                </h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h1 class="danger text-center">Your Order is empty!</h1>
+}
+
+<p class="text-danger">@ViewBag.ErrorMessage</p>

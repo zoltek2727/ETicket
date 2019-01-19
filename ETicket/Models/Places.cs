@@ -8,7 +8,6 @@ namespace ETicket.Models
         public Places()
         {
             Events = new HashSet<Events>();
-            Sectors = new HashSet<Sectors>();
         }
 
         public int PlaceId { get; set; }
@@ -20,6 +19,5 @@ namespace ETicket.Models
 
         public Cities City { get; set; }
         public ICollection<Events> Events { get; set; }
-        public ICollection<Sectors> Sectors { get; set; }
     }
 }
