@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ETicket.Models.Tickets>
+﻿@model IEnumerable<ETicket.Models.Events>
 
 @{
     ViewData["Title"] = "Cart";
@@ -21,6 +21,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th>Event</th>
                             <th>Ticket</th>
                             <th>Quantity</th>
                             <th class="text-center">Price</th>
@@ -31,56 +32,66 @@
                     <tbody>
                         @foreach (var item in ViewBag.cart)
                         {
-                            <tr>
-                                <td class="col-sm-8 col-md-6">
-                                    <div class="media">
-                                        @foreach (var photo in Model.Where(x => x.EventId == item.Ticket.EventId))
-                                        {
-                                            @if (photo.Event.PhotoEvents.Count > 1)
-                                            {
-                                                @foreach (var photo2 in photo.Event.PhotoEvents.Where(p => p.EventId == item.Ticket.EventId))
-                                                {
-                                                    @if (photo2.PhotoEventDefault)
-                                                    {
-                                                        <a class="thumbnail pull-left" href="#"> <img class="media-object" src="@photo2.Photo.PhotoUrl" style="width: 80px; height: 80px;"> </a>
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/images/emptyProduct.jpg" style="width: 80px; height: 80px;"> </a>
-                                            }
-                                        }
-                                        <div class="media-body text-center">
-                                            <h4 class="media-heading">@item.Ticket.TicketName</h4>
-                                            @*<h4 class="media-heading"><a asp-controller="Events" asp-action="Details" asp-route-id="@item.Ticket.EventId"> @item.Ticket.Event.EventName</a></h4>*@
-                                            @*<h4 class="media-heading"><a asp-controller="Events" asp-action="Details" asp-route-id="@item.Tickets.EventId">@item.Tickets.TicketName</a></h4>*@
-                                            @*<h5 class="media-heading"> code <b>@item.Product.ProductCode</b></h5>*@
-                                        </div>
+
+                        <tr>
+                            <td class="col-sm-6 col-md-6">
+                                @foreach (var ev in Model.Where(x => x.EventId == item.Ticket.EventId))
+                                {
+                                    <h4>@ev.EventName</h4>
+                                }
+                            </td>
+                            <td class="col-sm-4 col-md-4">
+                                <div class="media">
+                                    @*@foreach (var photo in Model.Where(x => x.EventId == item.Ticket.EventId))
+                {
+                    @if (photo.PhotoEvents.Count > 1)
+                    {
+                        @foreach (var photo2 in photo.PhotoEvents.Where(p => p.EventId == item.Ticket.EventId))
+                        {
+                            @if (photo2.PhotoEventDefault)
+                            {
+                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="@photo2.Photo.PhotoUrl" style="width: 80px; height: 80px;"> </a>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/images/emptyProduct.jpg" style="width: 80px; height: 80px;"> </a>
+                    }
+                }*@
+                                    <div class="media-body">
+
+                                        <h4 class="media-heading">@item.Ticket.TicketName</h4>
+                                        @*<h4 class="media-heading"><a asp-controller="Events" asp-action="Details" asp-route-id="@item.Ticket.EventId"> @item.Ticket.Event.EventName</a></h4>*@
+                                        @*<h4 class="media-heading"><a asp-controller="Events" asp-action="Details" asp-route-id="@item.Tickets.EventId">@item.Tickets.TicketName</a></h4>*@
+                                        @*<h5 class="media-heading"> code <b>@item.Product.ProductCode</b></h5>*@
                                     </div>
-                                </td>
-                                <td class="col-sm-1 col-md-1" style="text-align: center">
-                                    @*<input id="@item.Product.ProductId" type="number" min="1" step="1" max="@item.Product.ProductAvailability" value="@item.Quantity" class="form-control" /> from @item.Product.ProductAvailability*@
-                                    <span>@item.Quantity</span>
-                                </td>
-                                <td class="col-sm-2 col-md-2 text-center">
-                                    @item.Ticket.TicketPrice$
-                                </td>
-                                <td class="col-sm-2 col-md-2 text-center"><strong id="@item.Ticket.TicketId">@(item.Ticket.TicketPrice * item.Quantity)$</strong></td>
-                                <td class="col-sm-2 col-md-2">
-                                    <a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Ticket.TicketId">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove
-                                    </a>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                            <td class="col-sm-1 col-md-1" style="text-align: center">
+                                @*<input id="@item.Product.ProductId" type="number" min="1" step="1" max="@item.Product.ProductAvailability" value="@item.Quantity" class="form-control" /> from @item.Product.ProductAvailability*@
+                                <span>@item.Quantity</span>
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center">
+                                @item.Ticket.TicketPrice$
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center"><strong id="@item.Ticket.TicketId">@(item.Ticket.TicketPrice * item.Quantity)$</strong></td>
+                            <td class="col-sm-2 col-md-2">
+                                <a class="btn btn-danger" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Ticket.TicketId">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove
+                                </a>
+                            </td>
+                        </tr>
                         }
                         <tr>
                             <td>   </td>
                             <td>   </td>
                             <td>   </td>
+                            <td></td>
                             <td class="text-right" colspan="2"><h3>Total: <strong>@ViewBag.total$</strong></h3></td>
                         </tr>
                         <tr>
+                            <td></td>
                             <td>   </td>
                             <td>   </td>
                             <td>   </td>

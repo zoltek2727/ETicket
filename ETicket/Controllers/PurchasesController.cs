@@ -35,7 +35,7 @@ namespace ETicket.Controllers
             //var applicationDbContext = _context.Purchases.Where(p=>p.Id==id).Include(p => p.ApplicationUser).Include(p => p.Delivery).Include(p => p.Ticket);
             //return View(await applicationDbContext.ToListAsync());
 
-            var qry = _context.Purchases.Where(p => p.Id == id).Include(p => p.ApplicationUser).Include(p => p.Delivery).Include(p => p.Ticket).OrderBy(c => c.PurchaseTicketDate).AsNoTracking().AsQueryable();
+            var qry = _context.Purchases.Where(p => p.Id == id).Include(p => p.ApplicationUser).Include(p => p.Delivery).Include(p => p.Ticket).ThenInclude(e=>e.Event).OrderBy(c => c.PurchaseTicketDate).AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filter))
             {

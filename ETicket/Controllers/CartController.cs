@@ -40,9 +40,10 @@ namespace ETicket.Controllers
 
             if (cart != null)
             {
-                var tickets = _context.Tickets.Include(e=>e.Event).AsNoTracking();
+                var tickets = _context.Events.Include(e=>e.Tickets).AsNoTracking();
                                              
                 ViewBag.total = cart.Sum(item => item.Ticket.TicketPrice * item.Quantity);
+
                 return View(await tickets.ToListAsync());
             }
 
@@ -111,8 +112,7 @@ namespace ETicket.Controllers
 
             if (cart != null)
             {
-                var tickets = _context.Tickets.AsNoTracking()
-                                                .AsQueryable();
+                var tickets = _context.Events.Include(e => e.Tickets).AsNoTracking().AsQueryable();
 
                 ViewBag.total = cart.Sum(item => item.Ticket.TicketPrice * item.Quantity);
                 ViewBag.listOfDeliveries = _context.Deliveries.OrderBy(d => d.DeliveryType).ToList();

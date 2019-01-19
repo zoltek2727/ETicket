@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ETicket.Models.Tickets>
+﻿@model IEnumerable<ETicket.Models.Events>
 
 @{
     ViewData["Title"] = "Order";
@@ -31,41 +31,47 @@
                     <tbody>
                         @foreach (var item in ViewBag.cart)
                         {
-                            <tr>
-                                <td class="col-sm-8 col-md-6">
-                                    <div class="media">
-                                        @*@foreach (var photo in Model.Where(x => x.ProductId == item.Product.ProductId))
-                                            {*@
-                                        @if (1 > 1)
-                                        {
-                                            @*@foreach (var photo2 in photo.PhotoProducts.Where(p => p.ProductId == item.Product.ProductId))
-                                                {
-                                                    @if (photo2.PhotoProductIsDefault)
-                                                    {
-                                                        <a class="thumbnail pull-left" href="#"> <img class="media-object" src="@photo2.Photo.PhotoUrl" style="width: 72px; height: 72px;"> </a>
-                                                    }
-                                                }*@
-                                        }
-                                        else
-                                        {
-                                            <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/images/emptyProduct.jpg" style="width: 80px; height: 80px;"> </a>
-                                        }
-                                        @*}*@
-                                        <div class="media-body text-center">
-                                            <h4 class="media-heading">@item.Ticket.TicketName</h4>
-                                            @*<h4 class="media-heading"><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.ProductId">@item.Product.ProductName</a></h4>
-                                                <h5 class="media-heading"> code <b>@item.Product.ProductCode</b></h5>*@
-                                        </div>
+                        <tr>
+                            <td class="col-sm-6 col-md-6">
+                                @foreach (var ev in Model.Where(x => x.EventId == item.Ticket.EventId))
+                                {
+                                    <h4>@ev.EventName</h4>
+                                }
+                            </td>
+                            <td class="col-sm-4 col-md-4">
+                                <div class="media">
+                                    @*@foreach (var photo in Model.Where(x => x.ProductId == item.Product.ProductId))
+                    {
+                @if (1 > 1)
+                {
+                    @foreach (var photo2 in photo.PhotoProducts.Where(p => p.ProductId == item.Product.ProductId))
+                        {
+                            @if (photo2.PhotoProductIsDefault)
+                            {
+                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="@photo2.Photo.PhotoUrl" style="width: 72px; height: 72px;"> </a>
+                            }
+                        }
+                }
+                else
+                {
+                    <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/images/emptyProduct.jpg" style="width: 80px; height: 80px;"> </a>
+                }*@
+
+                                    <div class="media-body">
+                                        <h4 class="media-heading">@item.Ticket.TicketName</h4>
+                                        @*<h4 class="media-heading"><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.ProductId">@item.Product.ProductName</a></h4>
+                    <h5 class="media-heading"> code <b>@item.Product.ProductCode</b></h5>*@
                                     </div>
-                                </td>
-                                <td class="col-sm-1 col-md-1" style="text-align: center">
-                                    <h5>@item.Quantity</h5>
-                                </td>
-                                <td class="col-sm-2 col-md-2 text-center">
-                                    @item.Ticket.TicketPrice$
-                                </td>
-                                <td class="col-sm-2 col-md-2 text-center"><strong id="@item.Ticket.TicketId">@(item.Ticket.TicketPrice * item.Quantity)$</strong></td>
-                            </tr>
+                                </div>
+                            </td>
+                            <td class="col-sm-1 col-md-1" style="text-align: center">
+                                <h5>@item.Quantity</h5>
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center">
+                                @item.Ticket.TicketPrice$
+                            </td>
+                            <td class="col-sm-2 col-md-2 text-center"><strong id="@item.Ticket.TicketId">@(item.Ticket.TicketPrice * item.Quantity)$</strong></td>
+                        </tr>
                         }
 
                         <tr>
@@ -76,12 +82,12 @@
                             </td>
                             <td>
                             </td>
-                            <td align="right">
+                            @*<td align="right">
                                 <h3>
                                     Delivery:
                                 </h3> <br />
                                 @{ int value = 0;}
-                                    <select asp-for="@value" id="myList" class="form-control">
+                                    @*<select asp-for="@value" id="myList" class="form-control">
                                         @foreach (var item in ViewBag.listOfDeliveries)
                                         {
                                             <option value="@item.DeliveryId" onchange="@value=@item.DeliveryId">
@@ -90,8 +96,8 @@
                                         }
                                     </select>
                                 
-                            </td>
-                            <td align="right" colspan="1">
+                            </td>*@
+                            <td align="right" colspan="3">
                                 <h3>
                                     Sum:
                                     @ViewBag.Total$
